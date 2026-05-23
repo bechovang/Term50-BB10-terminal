@@ -1,138 +1,219 @@
-# Term49
+# Term50 — Terminal Emulator for BlackBerry 10
 
-Term49 is a terminal emulator for BlackBerry 10. It is a continuation of the amazing [Term48](https://github.com/mordak/Term48) project by [mordak](https://github.com/mordak).
+Term50 là terminal emulator cho BlackBerry 10, phát triển tiếp từ [Term48](https://github.com/mordak/Term48) bởi [mordak](https://github.com/mordak) và [Term49](https://github.com/BerryFarm/Term49) bởi BerryFarm.
 
-It implements (relevant parts of) the [ECMA-48 standard][ecma], but also includes some other control sequences to make it compliant with the `xterm-256color` terminfo specification. It is a work in progress, but is good enough for daily use. Pull requests, feature requests and bug reports are welcome.
+Ứng dụng implement chuẩn [ECMA-48](http://www.ecma-international.org/publications/standards/Ecma-048.htm) và tương thích `xterm-256color`. Yêu cầu BlackBerry 10 OS >= 10.3.
 
-The [current release](https://github.com/BerryFarm/Term49/releases) requires OS version >= 10.3.
+---
 
-## Current Customizations
+## Tính năng
 
-This tree is being extended with a BB10 keyboard-first workflow. The active
-focus areas are:
+| Tính năng | Mô tả |
+|-----------|-------|
+| **Terminal emulator** | ECMA-48 / VT100 / VT220, 256 màu |
+| **Japanese font fallback** | Hiển thị kana/kanji qua fallback fonts mà không cần thay font chính |
+| **Scrollback** | Duyệt lịch sử output bằng phím (half-page, full-page, top/bottom) |
+| **Symbol menu (Sym)** | Overlay bàn phím symbol tùy chỉnh, hỗ trợ touch |
+| **Accent menus** | Hold phím vowel để nhập ký tự có dấu (á, à, ả, ã, ạ...) |
+| **Altsym indicator** | Hiển thị trạng thái alt/sym trên màn hình |
+| **Config-driven macros** | Chỉnh macro từ file config, không cần rebuild |
+| **Background keep-alive** | Shell session tiếp tục chạy khi app bị minimise |
+| **SSH/SCP/SFTP** | Bundled trong app, sẵn sàng dùng |
+| **Keyboard-first** | Tối ưu cho physical keyboard BlackBerry 10 |
 
-* Japanese-safe text rendering via fallback fonts instead of replacing the
-  primary Latin font.
-* Scrollback and paste UX that works well with BlackBerry 10 physical
-  keyboards first, with touch only as a secondary shortcut.
-* A config-driven macro system that can be edited without rebuilding the app.
-* Background keep-alive so the shell session stays alive when the app is sent
-  to the background.
+---
 
-### Japanese Font Fallback
+## Cài đặt lên thiết bị
 
-Term49 still uses a primary fixed-width font for normal terminal layout, but
-can now be configured with fallback fonts for missing glyphs such as kana and
-kanji. The recommended way to customize this is in `.term49rc` using:
+### Yêu cầu
+- BlackBerry 10 device (OS >= 10.3)
+- Development Mode bật (Settings > App Manager > Development Mode)
 
-```cfg
-fallback_font_paths = [
-  "/path/to/your/japanese-font.ttf"
-];
+### Cài qua Sachesi (khuyên dùng)
+1. Tải [Sachesi](https://github.com/xsacha/Sachesi)
+2. Kết nối BB10 qua USB
+3. Tab **Install** > chọn file `.bar` > Install
+
+### Cài qua command line
+```bash
+blackberry-deploy -installApp 169.254.0.1 -password <device_password> Term49.bar
 ```
 
-This approach is safer than globally replacing the primary font because the
-terminal still measures columns from the main font.
+---
 
-### Keyboard-First Scroll and Paste
+## Cấu hình (.term49rc)
 
-The default metamode function map is being expanded with scroll helpers:
+File config tại `~/.term49rc` trên device. Format: [libconfig](http://www.hyperrealm.com/libconfig/).
 
-* `m`: open macro menu
-* `u` / `d`: half-page scroll up/down
-* `b` / `f`: full-page scroll up/down
-* `g`: jump to top of scrollback
-* `v`: paste clipboard
+### Font
+```cfg
+font_path = "/usr/fonts/font_repository/monotype/andalemo.ttf";
+fallback_font_paths = ["/path/to/japanese-font.ttf"];
+font_size = 24;
+```
 
-### Config-Driven Macros
+### Màu sắc
+```cfg
+text_color = [255, 255, 255];
+background_color = [0, 0, 0];
+```
 
-Macros are intended to be edited from config, not source. The current format is:
+### Terminal
+```cfg
+tty_encoding = "UTF-8";
+auto_show_vkb = 1;
+screen_idle_awake = 0;
+background_keepalive = 1;
+```
 
+### Bàn phím
+```cfg
+sticky_shift_key = 1;        # Double-tap shift = caps lock
+sticky_alt_key = 1;          # Double-tap alt = alt lock
+keyhold_actions = 1;         # Hold key cho accents
+metamode_hold_key = 32;      # Space = metamode (hold)
+metamode_doubletap_key = 60; # Right shift = metamode (double-tap)
+```
+
+### Macros
 ```cfg
 project_macros : (
-  ("s", "SSH LAN", "ssh Admin@192.168.1.6\n"),
-  ("x", "Example", "echo hello\n")
+    ("s", "SSH LAN", "ssh user@192.168.1.6\n"),
+    ("x", "Example", "echo hello\n")
 );
 ```
+Mỗi entry: `trigger key`, `label hiển thị`, `text gửi đến shell`.
 
-Each entry is:
+---
 
-* trigger key
-* label shown in the menu
-* text sent to the shell
+## Metamode
 
-Important: Term49 runs on BB10/QNX. Windows host commands like
-`cd "C:\\Users\\..." && python ...` are useful as personal references, but they
-will not execute correctly inside the device shell unless adapted for the
-device environment.
+Kích hoạt bằng **hold Space** hoặc **double-tap Right Shift**.
 
-### Background Keep-Alive
+| Key | Action | Mô tả |
+|-----|--------|-------|
+| `e` | ESC | Gửi Escape |
+| `t` | TAB | Gửi Tab |
+| `a` | ALT | Alt modifier (sticky) |
+| `c` | CTRL | Ctrl modifier (sticky) |
+| `s` | Rescreen | Refresh màn hình |
+| `v` | Paste | Paste clipboard |
+| `m` | Macro menu | Mở macro menu |
+| `u` | Scroll up | Nửa trang lên |
+| `d` | Scroll down | Nửa trang xuống |
+| `b` | Page up | Full trang lên |
+| `f` | Page down | Full trang xuống |
+| `g` | Top | Nhảy lên đầu scrollback |
+| `k` | Up | Vim-style arrow (sticky) |
+| `j` | Down | Vim-style arrow (sticky) |
+| `h` | Left | Vim-style arrow (sticky) |
+| `l` | Right | Vim-style arrow (sticky) |
 
-The target behavior is session persistence while the app is backgrounded:
+---
 
-* PTY and child shell remain alive
-* rendering pauses while inactive
-* returning to foreground resumes the same shell session
+## UI Overlay
 
-This is intentionally lighter-weight than a full headless service.
+Màn hình terminal có các nút touch:
 
-## Development
+| Vị trí | Màu | Chức năng |
+|--------|-----|-----------|
+| Góc trên phải | Vàng | Paste clipboard |
+| Góc dưới phải | Xanh dương | Trở về live view |
+| Thanh dọc phải | Xanh lá | Scrollback indicator (chỉ hiện khi đang xem history) |
 
-To compile Term49, you will need some additional libraries:
+---
 
-* [libSDL][libsdl]
-* [Touch Control Overlay][tco]
-* [libconfig][libconfig]
+## Phát triển
 
-Prebuilt versions of these shared libraries are available in `external/lib` (see Makefile); to build from source you will need to check out the submodules (call `git clone` with the `--recursive` option) and build them with the Momentics IDE. Note that when compiling SDL, you must define `-D__PLAYBOOK__ -DRAW_KEYBOARD_EVENTS`.
+Hướng dẫn đầy tiết đầy đủ: **[DEVELOPMENT.md](DEVELOPMENT.md)**
 
-You can build and deploy Term49 without using Momentics IDE:
+### Quick start (Windows)
 
-* Load the proper `bbndk-env` file
-* Copy your debug token to `signing/debugtoken.bar` (or see the section below on generating a debug token)
-* Populate the `BBIP` and `BBPASS` fields in `signing/bbpass` with your device's dev-mode IP address and device password
-* Update the `<author>` and `<authorId>` tags in `bar-descriptor.xml` to match the `Package-Author` and `Package-Author-Id` for your debug token: `unzip -p signing/debugtoken.bar META-INF/MANIFEST.MF | grep 'Package-Author:\|Package-Author-Id:'`
-* `make`
-* `make deploy`
+**Yêu cầu:**
+- Windows 10/11 (64-bit)
+- Java JDK 8
+- MSYS2 ([msys2.org](https://www.msys2.org/))
 
-## Generating a Debug Token
+**1. Cài BB10 NDK:**
 
-* Use this form to obtain your `bbidtoken.csk` file: https://developer.blackberry.com/codesigning/
-* Copy `bbidtoken.csk` to `signing/bbidtoken.csk`
-* In `signing/bbpass`, fill in:
-  - `CNNAME`: the Common Name for your signing cert (usually your name)
-  - `KEYSTOREPASS`: CSK password you entered in step 1 signup
-  - `BBPIN`: target device's PIN
-  - `BBPASS`: target device's password
-* Run `make` in `signing/Makefile` to request and deploy the token to your device.
+Tải toolchain từ archive.org và extract vào `C:\bbndk`:
+```powershell
+# Tải standalone SDK files từ archive.org/download/bbdevtools/
+# - bbndk.win32.tools.10.3.1.12.zip     (qcc, nativepackager)
+# - bbndk.win32.libraries.10.3.1.995.zip (headers, libs)
+# - bbndk.win32.cshost.10.3.1.995.zip
+# - bbndk.win32.qconfigmk.10.3.1.995.zip
+Expand-Archive -Path tools.zip -DestinationPath C:\bbndk -Force
+Expand-Archive -Path libraries.zip -DestinationPath C:\bbndk -Force
+Expand-Archive -Path cshost.zip -DestinationPath C:\bbndk -Force
+Expand-Archive -Path qconfigmk.zip -DestinationPath C:\bbndk -Force
+```
 
-Important: any symbols need to be escaped according to bash / Makefile rules e.g. backslashes before symbols `\!` and double dollar signs `\$$`.
+**2. Set môi trường:**
+```bash
+# MSYS2 terminal
+export QNX_HOST="/c/bbndk/host_10_3_1_12/win32/x86"
+export QNX_TARGET="/c/bbndk/target_10_3_1_995/qnx6"
+export PATH="$QNX_HOST/usr/bin:$PATH"
+```
 
-## Signing the release
+**3. Build:**
+```bash
+git clone --recursive https://github.com/bechovang/Term50-BB10-terminal.git
+cd Term50-BB10-terminal
+make
+```
 
-To distribute Term49, you need to sign the application bar with BlackBerry. To do that, run `make sign`.
+**4. Package:**
+```bash
+cmd //c "set QNX_HOST=C:\bbndk\host_10_3_1_12\win32\x86&& ^
+  C:\bbndk\host_10_3_1_12\win32\x86\usr\bin\blackberry-nativepackager.bat ^
+  -package Term49.bar bar-descriptor.xml -devMode"
+```
 
-## Debugging with GDB
+### Submodules
 
-To connect to the target device and enable debug tools such as GDB, the `blackberry-connect` tool must be started with the right arguments. For this, two terminals must have the correct `bbndk-env` environment loaded (or run the `make connect` command in the background).
+| Submodule | Source | Ghi chú |
+|-----------|--------|---------|
+| SDL | [mordak/SDL](https://github.com/mordak/SDL) (term48 branch) | Phải define `-D__PLAYBOOK__ -DRAW_KEYBOARD_EVENTS` |
+| TouchControlOverlay | [blackberry/TouchControlOverlay](https://github.com/blackberry/TouchControlOverlay) | Touch input overlay |
+| libconfig | [hyperrealm/libconfig](https://github.com/hyperrealm/libconfig) (tag f9f23d7) | Config file parser |
 
-### Terminal 1: `blackberry-connect`
-* Start in the Term49 root directory.
-* `cd signing`
-* If the SSH key hasn't been generated yet, run `make ssh-key`.
-* `make connect`
-* Leave terminal running until done debugging.
+Prebuilt `.so` files có sẵn trong `external/lib/`, chỉ cần build từ submodule khi muốn thay đổi.
 
-### Terminal 2: `gdb`
-* Start in the Term49 root directory.
-* `make launch-debug`
-* The package will be built, deployed to target device, and launched stopped. On host, `ntoarm-gdb` will start, connect to target device, and attach to the application process. To continue execution, run the GDB command `continue`. Further information on GDB can be found online.
+### Deploy & Debug
 
-## See also
+Chi tiết đầy đủ về debug token, signing, GDB debugging xem trong **[DEVELOPMENT.md](DEVELOPMENT.md)**.
 
-* [Term48 in BlackBerry AppWorld](http://appworld.blackberry.com/webstore/content/26272878/)
+---
 
-[ecma]: http://www.ecma-international.org/publications/standards/Ecma-048.htm
-[libsdl]: https://github.com/mordak/SDL/tree/term48
-[tco]: https://github.com/blackberry/TouchControlOverlay
-[libconfig]: http://www.hyperrealm.com/libconfig/
+## Cấu trúc dự án
+
+```
+src/
+  main.c            # Entry point, SDL init, event loop, rendering
+  buffer.c          # Terminal buffer, scrollback, cursor ops
+  ecma48.c          # ANSI escape sequence parser
+  io.c              # PTY I/O, Unicode conversion
+  preferences.c     # Config file parser (.term49rc)
+  symmenu.c         # Symbol keyboard overlay
+  accent_menus.c    # Accent character menus
+  SDL_ttf.c         # SDL TTF font rendering
+external/lib/       # Prebuilt: libSDL12.so, libconfig.so, libTouchControlOverlay.so
+share/root/bin/     # mksh, ssh, scp, sftp, ssh-keygen
+share/terminfo/     # Terminal descriptions
+icons/              # App icons (86x86 → 480x480)
+signing/            # Code signing config
+```
+
+---
+
+## Credits
+
+- [Term48](https://github.com/mordak/Term48) — Todd Mortimer (mordak)
+- [Term49](https://github.com/BerryFarm/Term49) — BerryFarm
+- [sizeof(cat)](https://archive.org/details/bbdevtools) — Lưu trữ BB10 NDK trên archive.org
+
+## License
+
+Apache License 2.0

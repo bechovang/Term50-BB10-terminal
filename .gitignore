@@ -8,3 +8,5 @@ signing/*.csk
 signing/*.bar
 signing/*.p12
 signing/ssh-key*
+BB10 development/
+docker/
