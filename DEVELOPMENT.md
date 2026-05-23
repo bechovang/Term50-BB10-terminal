@@ -851,3 +851,46 @@ git submodule update --init --recursive
 | SDL | github.com/mordak/SDL | `term48` branch |
 | TouchControlOverlay | github.com/blackberry/TouchControlOverlay | default |
 | libconfig | github.com/hyperrealm/libconfig | `f9f23d7` tag |
+
+---
+
+## 15. License & Attribution
+
+### Project Lineage
+
+```
+Term48 (mordak) → Term49 (BerryFarm) → Term50 (fork này)
+```
+
+- **Term48** — Todd Mortimer (mordak), Copyright (c) 2013 — [github.com/mordak/Term48](https://github.com/mordak/Term48)
+- **Term49** — BerryFarm — [github.com/BerryFarm/Term49](https://github.com/BerryFarm/Term49) (fork từ Term48)
+- **Term50** — Fork từ Term49, thêm: Japanese font fallback, scrollback, config macros, accent menus, altsym indicator
+
+### Main License
+
+```
+Apache License, Version 2.0
+Copyright (c) 2013 Todd Mortimer
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+```
+
+Xem file [LICENSE](LICENSE) cho toàn bộ văn bản license.
+
+### Third-party Licenses
+
+Chi tiết đầy đủ trong [share/NOTICE](share/NOTICE).
+
+| Component | License | Copyright Holder |
+|-----------|---------|-----------------|
+| **SDL 1.2** | GNU LGPL 2.1 | Sam Lantinga |
+| **SDL_ttf** | zlib-style (MIT-like) | Sam Lantinga |
+| **libconfig** | GNU LGPL 2.1 | Mark A Lindner |
+| **TouchControlOverlay** | Apache 2.0 | Research In Motion Limited |
+| **mksh** | MirOS Licence | Thorsten Glaser (mirabilos) |
+| **OpenSSH** | BSD (2-clause, 3-clause) | Markus Friedl, Theo de Raadt, Damien Miller, et al. |
+| **terminfo** | Various | Thomas Dickey, et al. |

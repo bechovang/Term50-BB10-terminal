@@ -208,12 +208,38 @@ signing/            # Code signing config
 
 ---
 
-## Credits
+## Project Lineage
 
-- [Term48](https://github.com/mordak/Term48) — Todd Mortimer (mordak)
-- [Term49](https://github.com/BerryFarm/Term49) — BerryFarm
-- [sizeof(cat)](https://archive.org/details/bbdevtools) — Lưu trữ BB10 NDK trên archive.org
+```
+Term48 (mordak) → Term49 (BerryFarm) → Term50 (fork này)
+```
+
+- **Term48** — [github.com/mordak/Term48](https://github.com/mordak/Term48) — Todd Mortimer (mordak), 2013
+- **Term49** — [github.com/BerryFarm/Term49](https://github.com/BerryFarm/Term49) — BerryFarm (fork từ Term48)
+- **Term50** — fork từ Term49, thêm Japanese font fallback, scrollback, config macros, accent menus, altsym indicator
 
 ## License
 
-Apache License 2.0
+Term50 là phần mềm mã nguồn mở phát hành dưới **Apache License 2.0**. Xem file [LICENSE](LICENSE) để biết chi tiết.
+
+Bản quyền gốc thuộc về Todd Mortimer (c) 2013, tiếp tục bởi BerryFarm và các contributor.
+
+### Third-party libraries
+
+Thư viện bên thứ ba được phân phối kèm ứng dụng, mỗi thư viện có license riêng (chi tiết trong [share/NOTICE](share/NOTICE)):
+
+| Library | License | Copyright |
+|---------|---------|-----------|
+| SDL 1.2 | GNU LGPL 2.1 | Sam Lantinga |
+| SDL_ttf | zlib-style | Sam Lantinga |
+| libconfig | GNU LGPL 2.1 | Mark A Lindner |
+| TouchControlOverlay | Apache 2.0 | Research In Motion Limited |
+| mksh | MirOS Licence | Thorsten Glaser |
+| OpenSSH | BSD | Markus Friedl, Theo de Raadt, et al. |
+
+### Credits
+
+- [Todd Mortimer](https://github.com/mordak) — Tác giả gốc Term48
+- [BerryFarm](https://github.com/BerryFarm) — Term49 fork + releases
+- [Andrew D'Angelo](https://github.com/ardangelo) — Term48 contributor
+- [sizeof(cat)](https://archive.org/details/bbdevtools) — Lưu trữ BB10 NDK trên archive.org
