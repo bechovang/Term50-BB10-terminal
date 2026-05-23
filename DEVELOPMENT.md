@@ -17,7 +17,7 @@ Hướng dẫn đầy đủ về cài đặt môi trường phát triển, build
 9. [Debug với GDB](#9-debug-với-gdb)
 10. [Cấu trúc dự án](#10-cấu-trúc-dự-án)
 11. [Kiến trúc source code](#11-kiến-trúc-source-code)
-12. [Config file (.term49rc)](#12-config-file-term49rc)
+12. [Config file (.term50rc)](#12-config-file-term50rc)
 13. [Build với Docker (Linux)](#13-build-với-docker-linux)
 14. [Troubleshooting](#14-troubleshooting)
 
@@ -223,7 +223,7 @@ make clean
 make
 ```
 
-Kết quả: `Device-Debug/Term49` (ARM binary, ~278KB)
+Kết quả: `Device-Debug/Term50` (ARM binary, ~278KB)
 
 ### 5.3. Build flags
 
@@ -273,17 +273,17 @@ qcc -V4.6.3,gcc_ntoarmv7le     # Target ARM, GCC 4.6.3
 cd /path/to/Term50-BB10-terminal
 cmd //c "set QNX_HOST=C:\bbndk\host_10_3_1_12\win32\x86&& ^
   C:\bbndk\host_10_3_1_12\win32\x86\usr\bin\blackberry-nativepackager.bat ^
-  -package Term49.bar bar-descriptor.xml -devMode"
+  -package Term50.bar bar-descriptor.xml -devMode"
 ```
 
-Output: `Term49.bar` (~3MB)
+Output: `Term50.bar` (~3MB)
 
 ### 6.2. Package release (cần signing)
 
 ```bash
 cmd //c "set QNX_HOST=C:\bbndk\host_10_3_1_12\win32\x86&& ^
   C:\bbndk\host_10_3_1_12\win32\x86\usr\bin\blackberry-nativepackager.bat ^
-  -package Term49.bar bar-descriptor.xml"
+  -package Term50.bar bar-descriptor.xml"
 ```
 
 ### 6.3. bar-descriptor.xml
@@ -292,15 +292,15 @@ File mô tả ứng dụng BB10, các field quan trọng:
 
 ```xml
 <qnx xmlns="http://www.qnx.com/schemas/application/1.0">
-    <id>com.example.Term49</id>
-    <name>Term49</name>
+    <id>com.example.Term50</id>
+    <name>Term50</name>
     <versionNumber>1.0.0</versionNumber>
     <author>Term50</author>
 
     <!-- Binary -->
     <configuration name="Device-Debug">
         <platformArchitecture>armle-v7</platformArchitecture>
-        <asset path="Device-Debug/Term49" entry="true" type="Qnx/Elf">Term49</asset>
+        <asset path="Device-Debug/Term50" entry="true" type="Qnx/Elf">Term50</asset>
     </configuration>
 
     <!-- Assets -->
@@ -349,7 +349,7 @@ BBIP   := 169.254.0.1         # USB: 169.254.0.1, WiFi: IP của device
 # Từ MSYS2, sử dụng blackberry-deploy
 cmd //c "set QNX_HOST=C:\bbndk\host_10_3_1_12\win32\x86&& ^
   C:\bbndk\host_10_3_1_12\win32\x86\usr\bin\blackberry-deploy ^
-  -installApp 169.254.0.1 -password YOUR_PASSWORD Term49.bar"
+  -installApp 169.254.0.1 -password YOUR_PASSWORD Term50.bar"
 ```
 
 ### 7.4. Deploy qua Sachesi (GUI)
@@ -357,7 +357,7 @@ cmd //c "set QNX_HOST=C:\bbndk\host_10_3_1_12\win32\x86&& ^
 Nếu không muốn dùng command line:
 1. Tải [Sachesi](https://github.com/xsacha/Sachesi)
 2. Kết nối BB10 qua USB
-3. Tab **Install** > chọn file `Term49.bar` > Install
+3. Tab **Install** > chọn file `Term50.bar` > Install
 
 ### 7.5. Debug Token (cần cho dev-mode .bar)
 
@@ -429,7 +429,7 @@ Term50-BB10-terminal/
 │   ├── buffer.c                  # Terminal buffer, scroll, cursor, char ops
 │   ├── ecma48.c                  # ECMA-48 parser (ANSI escape sequences)
 │   ├── io.c                      # PTY I/O, Unicode conversion
-│   ├── preferences.c             # Config file parser (.term49rc)
+│   ├── preferences.c             # Config file parser (.term50rc)
 │   ├── symmenu.c                 # Symbol keyboard overlay
 │   ├── accent_menus.c            # Accent character menus
 │   ├── SDL_ttf.c                 # SDL TTF font rendering (inline)
@@ -538,7 +538,7 @@ Term50-BB10-terminal/
 - Read/write from PTY file descriptors
 
 #### `preferences.c` - Configuration
-- Parse `.term49rc` config file (libconfig format)
+- Parse `.term50rc` config file (libconfig format)
 - Default values for all settings
 - Keymap management (symmenu, metamode, macros)
 - Font fallback paths
@@ -601,9 +601,9 @@ typedef struct _symmenu_t {
 
 ---
 
-## 12. Config file (.term49rc)
+## 12. Config file (.term50rc)
 
-File config được đặt tại home directory trên device: `~/.term49rc`
+File config được đặt tại home directory trên device: `~/.term50rc`
 
 Format: [libconfig](http://www.hyperrealm.com/libconfig/)
 
@@ -716,7 +716,7 @@ WORKDIR /build
 docker build -t bb10-builder docker/
 docker run --rm -v $(pwd):/build bb10-builder \
     bash -c "source /opt/bbndk/bbndk-env_*.sh; cd /build && make && \
-    blackberry-nativepackager -package Term49.bar bar-descriptor.xml -devMode"
+    blackberry-nativepackager -package Term50.bar bar-descriptor.xml -devMode"
 ```
 
 ---
@@ -771,7 +771,7 @@ rect.x = x; rect.y = 0; rect.w = w; rect.h = h;
 ```bash
 cmd //c "set QNX_HOST=C:\bbndk\host_10_3_1_12\win32\x86&& \
   C:\bbndk\host_10_3_1_12\win32\x86\usr\bin\blackberry-nativepackager.bat \
-  -package Term49.bar bar-descriptor.xml -devMode"
+  -package Term50.bar bar-descriptor.xml -devMode"
 ```
 
 ### `Invalid value 'Package-Author-Id' for attribute`
