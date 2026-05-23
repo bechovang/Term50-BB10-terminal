@@ -1316,18 +1316,18 @@ void render() {
 
 	if (!buf_view_is_live()) {
 		int marker_x = screen->w - (advance / 2 > 4 ? advance / 2 : 4);
-		SDL_Rect live_marker = {marker_x, 0, 4, screen->h};
-		SDL_FillRect(screen, &live_marker, SDL_MapRGB(screen->format, UI_SCROLL.r, UI_SCROLL.g, UI_SCROLL.b));
+		SDL_Rect live_marker; live_marker.x = marker_x; live_marker.y = 0; live_marker.w = 4; live_marker.h = screen->h;
+		SDL_FillRect(screen, &live_marker, SDL_MapRGB(screen->format, 123, 202, 136));
 	}
 
 	int button_size = advance * 3;
 	if (button_size < 48) {
 		button_size = 48;
 	}
-	SDL_Rect paste_button = {screen->w - button_size, 0, button_size, button_size};
-	SDL_Rect live_button = {screen->w - button_size, screen->h - button_size, button_size, button_size};
-	SDL_FillRect(screen, &paste_button, SDL_MapRGB(screen->format, UI_PASTE.r, UI_PASTE.g, UI_PASTE.b));
-	SDL_FillRect(screen, &live_button, SDL_MapRGB(screen->format, UI_ACCENT.r, UI_ACCENT.g, UI_ACCENT.b));
+		SDL_Rect paste_button; paste_button.x = screen->w - button_size; paste_button.y = 0; paste_button.w = button_size; paste_button.h = button_size;
+		SDL_Rect live_button; live_button.x = screen->w - button_size; live_button.y = screen->h - button_size; live_button.w = button_size; live_button.h = button_size;
+		SDL_FillRect(screen, &paste_button, SDL_MapRGB(screen->format, 255, 196, 61));
+		SDL_FillRect(screen, &live_button, SDL_MapRGB(screen->format, 0, 186, 255));
 
 	SDL_Flip(screen);
 

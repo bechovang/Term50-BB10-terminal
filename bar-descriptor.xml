@@ -46,9 +46,9 @@
     <description>The Term49 application</description>
 
     <!--  Must match the developer name of your developer certificate. -->
-    <author>Package-Author</author>
+    <author>Term50</author>
     <!--  Unique author ID assigned by signing authority. Required if using debug tokens. -->
-    <authorId>Package-Author-Id</authorId>
+    
 
     <initialWindow>
       <autoOrients>true</autoOrients>
